@@ -1,0 +1,131 @@
+@()
+@import helper._
+@import java.text.DateFormat
+
+@main("Bookkake") {
+  <script type="text/javascript">
+    function lendbook(bookId, bookName) {
+      $(".right-col-form").attr("style", "display: none;");
+      $("#lend-book-form").attr("style", "");
+      $("#lend-book-form").attr("action", "/books/loan/" + bookId)
+
+      $(".right-bar-title").attr("style", "display: none;");
+      $("#lend-book-title").attr("style", "");
+
+      $("tr").attr("class", "");
+      $("tr:contains(" + bookName + ")").attr("class", "info");
+    }
+    function addbook() {
+      $(".right-col-form").attr("style", "display: none;");
+      $("#add-book-form").attr("style", "");
+
+      $(".right-bar-title").attr("style", "display: none;");
+      $("#add-book-title").attr("style", "");
+
+      $("tr").attr("class", "");
+    }
+    function givebook(bookId, bookName) {
+      $(".right-col-form").attr("style", "display: none;");
+      $("#give-book-form").attr("style", "");
+      $("#give-book-form").attr("action", "/books/give/" + bookId)
+
+      $(".right-bar-title").attr("style", "display: none;");
+      $("#give-book-title").attr("style", "");
+
+      $("tr").attr("class", "");
+      $("tr:contains(" + bookName + ")").attr("class", "info");
+    }
+     
+  </script>
+   <h2>Hello, @Application.getUser().userName!</h2>
+   <div class="row">
+     <div class="span10">
+       <h3>Your Books</h3>
+     </div>
+     <div class="span2">
+       <h3 id="add-book-title" class="right-bar-title">Add Book</h3>
+       <h3 id="lend-book-title" class="right-bar-title" style="display: none;">Lend Book</h3>
+       <h3 id="give-book-title" class="right-bar-title" style="display: none;">Give Book</h3>
+     </div>
+   </div>
+   <div class="row">
+   <div class="span10">
+   <table class="table table-bordered table-hover">
+     <tr>
+       <td>Name</td>
+       <td>Author(s)</td>
+       <td>Who has it?</td>
+       <td>Status</td>
+       <td>Due date</td>
+       <td>Delete</td>
+       <td>Actions</td>
+     </t>
+     @for(book <- Book.getOwnedAndPossessedBooks(Application.getUser())){
+       @if(book.active == "True"){
+         <tr>
+           <td><a href="/books/@book.id">@book.name</a></td>
+           <td>@book.author</td>
+	   <td>@linkuserid(book.userIdPossessor)</td>
+           <td>@book.status</td>
+	   <td>
+           @if(book.due != null){
+	     @DateFormat.getDateInstance(DateFormat.MEDIUM).format(book.due)
+	   }
+	   </td>
+	   <td>
+             @if(book.userIdOwner == book.userIdPossessor){
+	       <a href="/books/delete/@book.id">Delete</a>
+	     }
+           </td>
+	   <td>
+             @if(book.userIdOwner == book.userIdPossessor){
+	     <a href="javascript:void(0)" onclick="lendbook(@book.id, '@book.name.replace("'", "\\'")')">Lend</a>
+	     /
+	     <a href="javascript:void(0)" onclick="givebook(@book.id, '@book.name.replace("'", "\\'")')">Give</a>
+	     }
+	     @if(book.userIdOwner != book.userIdPossessor && book.userIdOwner == Application.getUser().id){
+               <a href="/books/return/@book.id">Return</a>
+	     }
+	   </td>
+        </tr>
+      }
+    }
+  </table>
+  <a href="javascript:void(0)" onclick="addbook()">Add Book</a>
+  </div>
+  <div class="span2">
+  <form method="POST" action="/books" id="add-book-form" class="right-col-form">
+    Enter book name:
+    <div><input type="text" name="name"></div>
+    Enter author(s) name (optional):
+    <div><input type="text" name="author"></div>
+    <br>
+    <div>
+      <select name="status">
+        <option>Using</option>
+        <option>Will lend</option>
+        <option>Want to Sell</option>
+      </select>
+    </div>
+    <br>
+    <input type="submit" value="Create">
+  </form>
+  <form id="lend-book-form" method="POST" style="display: none;" class="right-col-form">
+    Receiver's username:
+    <div><input type="text" name="name" placeholder="username"></div>
+    Price:
+    <div><input type="number" name="price" validate="^\\$?(([1-9](\\d*|\\d{0,2}(,\\d{3})*))|0)(\\.\\d{1,2})?$" placeholder="0.00"></div>
+    Due-date:
+    <div><input type="date" name="due-date"></div>
+    <div><input type="submit"></div>
+  </form>
+  <form  id="give-book-form" class="right-col-form" style="display: none;" method="POST">
+    Receiver's username:
+    <div><input type="text" name="name" placeholder="username"></div>
+    Price:
+    <div><input type="number" name="price" validate="^\\$?(([1-9](\\d*|\\d{0,2}(,\\d{3})*))|0)(\\.\\d{1,2})?$" placeholder="0.00"></div>
+    <div><input type="submit"></div>
+  </form>
+  </div>
+  </div>
+}

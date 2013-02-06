@@ -1,0 +1,31 @@
+@(tList: List[models.Transaction], fieldList: List[String])
+@import java.text.DateFormat
+@import scala._
+
+@retrieve(t: models.Transaction, item: String) = { 
+    @if(item == "Date"){ @DateFormat.getDateInstance(DateFormat.MEDIUM).format(t.date) }
+    @if(item == "Name"){ @Book.find.byId(t.bookId).name }
+    @if(item == "Type"){ @t.kind }
+    @if(item == "Book"){ @Book.find.byId(t.bookId).name }
+    @if(item == "User"){ @linkuserid(t.userId) }
+    @if(item == "Receiver" && t.receiverId != null) { @linkuserid(t.receiverId) }
+    @if(item == "Payment") {
+          <script type="text/javascript">
+            document.write(accounting.formatMoney(@t.payment / 100.0))
+          </script> }
+    @if(item == "Due-Date" && t.dueDate != null) { @DateFormat.getDateInstance(DateFormat.MEDIUM).format(t.dueDate) }
+}
+<table class="table table-bordered table-hover">
+  <tr>
+    @for(field <- fieldList){
+      <td>@field</td>
+    }
+  </tr>
+  @for(t <- tList){
+    <tr>
+    @for(f <- fieldList){
+      <td>@retrieve(t, f)</td>
+    }
+    </tr>
+  }
+</table>

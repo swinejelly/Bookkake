@@ -1,0 +1,22 @@
+@(users: List[User])
+@main("Bookkake - Users"){
+  <h1>Users</h1>
+  <div class="row">
+  <div class="span6">
+  <table class="table table-bordered table-hover table-compact">
+    <tr>
+      <td>Name</td>
+      <td>Real Name</td>
+      <td>Room</td>
+    </tr>
+    @for(user <- users){
+    <tr>
+      <td>@linkuser(user)</td>
+      <td>@user.realName</td>
+      <td>@user.location</td>
+    </tr>
+    }
+  </table>
+  </div>
+  </div>
+}

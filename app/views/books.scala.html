@@ -1,0 +1,26 @@
+@(books: List[Book])
+
+@import helper._
+@main("Bookkake - Books"){
+  <h2>@books.filter(b => b.active == "True").size() Books</h2>
+  <table class="table table-bordered table-hover">
+    <tr>
+      <td>Name</td>
+      <td>Author(s)</td>
+      <td>Owner</td>
+      <td>Who has it</td>
+      <td>Status</td>
+    </tr>
+    @for(book <- books) {
+    @if(book.active == "True"){
+      <tr>
+        <td><a href="/books/@book.id">@book.name</a></td>
+        <td>@book.author</td>
+        <td>@User.find.where().eq("id", book.userIdOwner).findUnique().userName</td>
+	<td>@User.find.where().eq("id", book.userIdPossessor).findUnique().userName</td>
+        <td>@book.status</td>
+      </tr>
+    }
+    }
+  </table>
+}

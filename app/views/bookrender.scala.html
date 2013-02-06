@@ -1,0 +1,41 @@
+@(b: Book)
+@import scala._
+@import helper._
+@main("Bookkake - " + b.name){
+  <h2>@b.name</h2>
+  <div class="row">
+    <div class="span10">
+      <h3>Owned by @linkuserid(b.userIdOwner) -- Possessed by @linkuserid(b.userIdPossessor)</h3>
+    </div>
+    @if(Application.getUser().id == b.userIdOwner){
+    <div class="span2">
+      <h3>Edit Book</h3>
+    </div>
+    }
+  </div>
+  <div class="row">
+    <div class="span10">
+	    @transactiontable(models.Transaction.find.where().eq("bookId", b.id).orderBy("date ASC").findList(),
+	      List("Date", "Type", "User", "Receiver", "Payment", "Due-Date"))
+    </div>
+    @if(Application.getUser().id == b.userIdOwner){
+    <div class="span2">
+      @form(routes.Application.editBook(b.id)){
+        Change book name:
+        <div><input type="text" name="name" value="@b.name"></div>
+        Change author name(s):
+        <div><input type="text" name="author" value="@b.author"></div>
+        <div>
+         <select name="status">
+           <option @if(b.status == "Using"){ selected="selected" }>Using</option>
+           <option @if(b.status == "Will lend"){ selected="selected" }>Will lend</option>
+           <option @if(b.status == "Want to Sell"){ selected="selected" }>Want to Sell</option>
+         </select>
+        </div>
+        <input type="submit" value="Edit">
+      }
+
+    </div>
+    }
+  </div>
+}    

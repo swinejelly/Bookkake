@@ -1,0 +1,57 @@
+@(title: String)
+@import helper._
+@import play.api.Play
+
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <ul class="nav">
+        <li>
+          <a class="brand" href="/">@title</a>
+        </li>
+	<li>
+          <a href="/books">Books</a>
+	</li>
+	<li>
+          <a href="/users">Users</a>
+	</li>
+	<li>
+	  <a href="/users/@Application.getUser().id">Profile</a>
+	<li>
+	<li>
+	  <a href="/faq">FAQ</a>
+	</li>
+      </ul>
+      @if(!Play.isProd(Play.current)){
+      <form class="navbar-form pull-left" action="/switchuser" method="POST">
+        <input type="text" name="user" class="span2" placeholder="Switch user">
+	<button type="submit" class="btn">Switch</button>
+      </form>
+      }
+      <form class="navbar-form pull-right" action="/books" method="GET">
+        <input type="text" class="span3" name="query" placeholder="Search books/authors">
+	<button type="submit" class="btn">Search</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+@if(flash.get("errors") != null){
+  @for(message <- flash.get("errors").split(";")){
+    <div class="alert alert-error">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      @message
+    </div>
+  }
+}
+@if(flash.get("success") != null){
+  <div class="alert alert-success"> 
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    @flash.get("success")
+  </div>
+}
+@for(message <- Message.find.where().eq("recipientId", Application.getUser().id).findList()){
+  <div class="alert alert-info">
+    @message.contents
+  </div>
+}

@@ -125,9 +125,13 @@ public class Application extends Controller {
    */
   public static User getUser(){
     String name = userOverride == null ? request().getHeader("X-WEBAUTH-USER") : userOverride;
+    String realName = request().getHeader("X-WEBAUTH-LDAP-CN");
     if (User.find.where().eq("userName", name).findList().isEmpty()){
       User user = new User();
       user.userName = name;
+      if (userOverride == null){
+        user.realName = realName;
+      }
       user.save();
       user.giveMessage(
         "Welcome to Bookkake!"

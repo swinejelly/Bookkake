@@ -22,8 +22,6 @@
       @if(u.id == Application.getUser().id){
         <div class="span2">
         <form method="POST" action="/users">
-          <label>Real Name</label>
-          <input type="text" name="realname" value="@u.realName">
           <label>Room/Location</label>
           <input type="text" name="location" value="@u.location">
 	  <input type="submit">

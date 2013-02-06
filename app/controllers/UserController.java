@@ -22,7 +22,6 @@ public class UserController extends Controller {
 	public static Result editUser(){
 		User u = Application.getUser();
 		DynamicForm form = new DynamicForm().bindFromRequest();
-		u.realName = form.get("realname");
 		u.location = form.get("location");
 
 		String errors = Application.errorsAsString(u);

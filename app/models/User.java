@@ -23,7 +23,6 @@ public class User extends Model {
   public String userName;
   @Size(min=0, max=64, message="Location must be less than {max} characters!")
   public String location;
-  @Size(min=0, max=64, message="Real name must be less than {max} characters!")
   public String realName;
 
   public static Finder<Long, User> find =

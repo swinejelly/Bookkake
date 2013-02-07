@@ -43,7 +43,7 @@
        <h3>Your Books</h3>
      </div>
      <div class="span2">
-       <h3 id="add-book-title" class="right-bar-title">Add Book</h3>
+       <h3 id="add-book-title" class="right-bar-title" style="display: none;">Add Book</h3>
        <h3 id="lend-book-title" class="right-bar-title" style="display: none;">Lend Book</h3>
        <h3 id="give-book-title" class="right-bar-title" style="display: none;">Give Book</h3>
      </div>
@@ -94,7 +94,7 @@
   <a href="javascript:void(0)" onclick="addbook()">Add Book</a>
   </div>
   <div class="span2">
-  <form method="POST" action="/books" id="add-book-form" class="right-col-form">
+  <form method="POST" action="/books" id="add-book-form" class="right-col-form" style="display: none;">
     Enter book name:
     <div><input type="text" name="name"></div>
     Enter author(s) name (optional):

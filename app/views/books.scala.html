@@ -1,7 +1,7 @@
 @(books: List[Book])
 
 @import helper._
-@main("Bookkake - Books"){
+@main("Bookkake", "Books"){
   <h2>@books.filter(b => b.active == "True").size() Books</h2>
   <table class="table table-bordered table-hover">
     <tr>

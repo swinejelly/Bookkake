@@ -16,8 +16,13 @@
   </div>
   <div class="row">
     <div class="span10">
-      @transactiontable(models.Transaction.find.where().eq("userId", u.id).orderBy("date DESC").findList(),
-          List("Date", "Name", "Type", "Receiver", "Payment", "Due-Date"))
+      @transactiontable(
+
+        models.Transaction.find.where().or(
+          Expr.eq("userId", u.id), Expr.eq("receiverId", u.id))
+            .orderBy("date DESC").findList(),
+          List("Date", "Name", "Type", "Receiver", "Payment", "Due-Date")
+      )
     </div>
       @if(u.id == Application.getUser().id){
         <div class="span2">

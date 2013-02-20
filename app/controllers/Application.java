@@ -73,6 +73,19 @@ public class Application extends Controller {
     b.status = form.get("status");
     b.author = form.get("author");
     b.active = "True";
+    Long cents;
+    try{
+      if (!form.get("price").isEmpty()){
+        Double price = Double.parseDouble(form.get("price"));
+        cents = Math.round(price * 100);
+	if (cents < 0) cents = 0L;
+      }else{
+        cents = 0L;
+      }
+    }catch (NumberFormatException e){
+      return redirectErr("Could not understand price input; transaction canceled");
+    }
+    b.targetPrice = cents;
     if (errorsAsString(b).isEmpty()){
       b.save();
       //Create transaction
@@ -281,6 +294,17 @@ public class Application extends Controller {
       b.name = form.get("name");
       b.author = form.get("author");
       b.status = form.get("status");
+      if (b.status.equals("Want to Sell")){
+        try{
+          Double d = Double.parseDouble(form.get("price"));
+          b.targetPrice = Math.round(d * 100);
+	  if (b.targetPrice < 0L) b.targetPrice = 0L;
+        } catch (NumberFormatException e){
+          b.targetPrice = 0L;
+        }
+      }else{
+        b.targetPrice = 0L;
+      }
       if (errorsAsString(b).isEmpty()){
         b.update();
 	return redirectSucc("Book "+b.name+" updated.");

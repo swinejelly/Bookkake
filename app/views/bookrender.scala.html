@@ -26,16 +26,43 @@
         Change author name(s):
         <div><input type="text" name="author" value="@b.author"></div>
         <div>
-         <select name="status">
+         <select name="status" id="status-selector">
            <option @if(b.status == "Using"){ selected="selected" }>Using</option>
            <option @if(b.status == "Will lend"){ selected="selected" }>Will lend</option>
            <option @if(b.status == "Want to Sell"){ selected="selected" }>Want to Sell</option>
          </select>
         </div>
-        <input type="submit" value="Edit">
+	@if(b.status == "Want to Sell"){
+	  <span class='price'>Offer</span>
+          <input type='number' name='price' min='0' max='1000' step='.01' placeholder='@(b.targetPrice / 100.0)' class='price'>
+	}
+        <input type="submit" value="Edit" id="submit-button">
       }
 
     </div>
     }
   </div>
+  <script type="text/javascript">
+    var showPriceInput = function (toggle) {
+      console.log(toggle);
+      if(toggle && !($(".price").length > 0)){
+        $("#submit-button").before("<span class='price'>Offer</span>");
+        $("#submit-button").before("<input type='number' name='price' min='0' max='1000' step='.01' placeholder='@(b.targetPrice / 100.0)' class='price'>");
+      }else if (!toggle){
+        $(".price").remove();
+      }
+    };
+    window.onload= function () {
+      var selector = $("#status-selector");
+      selector.bind("change",
+        function () {
+	  console.log(this.options[this.selectedIndex]);
+          if(this.options[this.selectedIndex].value == "Want to Sell"){
+			showPriceInput(true);
+          }else{
+			showPriceInput(false);
+          }
+      });
+    };
+  </script>
 }    

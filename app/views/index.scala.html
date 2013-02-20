@@ -9,8 +9,7 @@
       $("#lend-book-form").attr("style", "");
       $("#lend-book-form").attr("action", "/books/loan/" + bookId)
 
-      $(".right-bar-title").attr("style", "display: none;");
-      $("#lend-book-title").attr("style", "");
+      $("#right-col-title").text("Lend Book");
 
       $("tr").attr("class", "");
       $("tr:contains(" + bookName + ")").attr("class", "info");
@@ -19,8 +18,7 @@
       $(".right-col-form").attr("style", "display: none;");
       $("#add-book-form").attr("style", "");
 
-      $(".right-bar-title").attr("style", "display: none;");
-      $("#add-book-title").attr("style", "");
+      $("#right-col-title").text("Add Book");
 
       $("tr").attr("class", "");
     }
@@ -29,13 +27,25 @@
       $("#give-book-form").attr("style", "");
       $("#give-book-form").attr("action", "/books/give/" + bookId)
 
-      $(".right-bar-title").attr("style", "display: none;");
-      $("#give-book-title").attr("style", "");
+      $("#right-col-title").text("Give Book");
 
       $("tr").attr("class", "");
       $("tr:contains(" + bookName + ")").attr("class", "info");
     }
-     
+    //this adds some extra input to the add book form if the user chooses "want to sell" 
+    window.onload = function () {
+      $("#book-status-selector").bind("change",
+        function (e) {
+	  if (this.options[this.selectedIndex].value == "Want to Sell"){
+            $("<span id='sell-label' class='white-space: nowrap;'>Enter Offer</span>").insertBefore("#add-submit");
+	    $("<input id='sell-price' type='number' name='price' max='1000' min='0' step='.01' placeholder='0.00'>")
+	      .insertBefore("#add-submit");
+          }else{
+	    $("#sell-label").remove();
+            $("#sell-price").remove();
+	  }
+	});
+    }
   </script>
    <h2>Hello, @Application.getUser().userName!</h2>
    <div class="row">
@@ -43,9 +53,7 @@
        <h3>Your Books</h3>
      </div>
      <div class="span2">
-       <h3 id="add-book-title" class="right-bar-title" style="display: none;">Add Book</h3>
-       <h3 id="lend-book-title" class="right-bar-title" style="display: none;">Lend Book</h3>
-       <h3 id="give-book-title" class="right-bar-title" style="display: none;">Give Book</h3>
+       <h3 id="right-col-title"></h3>
      </div>
    </div>
    <div class="row">
@@ -59,14 +67,19 @@
        <td>Due date</td>
        <td>Delete</td>
        <td>Actions</td>
-     </t>
+     </tr>
      @for(book <- Book.getOwnedAndPossessedBooks(Application.getUser())){
        @if(book.active == "True"){
          <tr>
            <td><a href="/books/@book.id">@book.name</a></td>
            <td>@book.author</td>
 	   <td>@linkuserid(book.userIdPossessor)</td>
-           <td>@book.status</td>
+	   <td><span style="float: left;">@book.status</span>
+		   <b style="color: orange; float: right;">
+			   @if(book.targetPrice != null && book.status.equals("Want to Sell")){
+			         @("$%.2f".format(book.targetPrice / 100.0))}
+                   </b>
+	   </td>
 	   <td>
            @if(book.due != null){
 	     @DateFormat.getDateInstance(DateFormat.MEDIUM).format(book.due)
@@ -97,24 +110,24 @@
   <form method="POST" action="/books" id="add-book-form" class="right-col-form" style="display: none;">
     Enter book name:
     <div><input type="text" name="name"></div>
-    Enter author(s) name (optional):
+    <span style="white-space: nowrap;">Enter author(s) name (optional):</span>
     <div><input type="text" name="author"></div>
     <br>
     <div>
-      <select name="status">
+      <select id="book-status-selector" name="status">
         <option>Using</option>
         <option>Will lend</option>
         <option>Want to Sell</option>
       </select>
     </div>
     <br>
-    <input type="submit" value="Create">
+    <input id="add-submit" type="submit" value="Create">
   </form>
   <form id="lend-book-form" method="POST" style="display: none;" class="right-col-form">
     Receiver's username:
     <div><input type="text" name="name" placeholder="username"></div>
     Price:
-    <div><input type="number" name="price" validate="^\\$?(([1-9](\\d*|\\d{0,2}(,\\d{3})*))|0)(\\.\\d{1,2})?$" placeholder="0.00"></div>
+    <div><input type="number" name="price" max="1000" min="0" step=".01" placeholder="0.00"></div>
     Due-date:
     <div><input type="date" name="due-date"></div>
     <div><input type="submit"></div>
@@ -123,7 +136,7 @@
     Receiver's username:
     <div><input type="text" name="name" placeholder="username"></div>
     Price:
-    <div><input type="number" name="price" validate="^\\$?(([1-9](\\d*|\\d{0,2}(,\\d{3})*))|0)(\\.\\d{1,2})?$" placeholder="0.00"></div>
+    <div><input type="number" name="price" max="1000" min="0" step=".01" placeholder="0.00"></div>
     <div><input type="submit"></div>
   </form>
   </div>

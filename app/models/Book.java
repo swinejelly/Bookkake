@@ -40,6 +40,12 @@ public class Book extends Model {
   @Future
   public Timestamp due;
 
+  //an optional price for the user that will be displayed if the status is want to sell.
+  @javax.validation.constraints.Min(0)
+  @javax.validation.constraints.Max(100000)
+  public Long targetPrice;
+  
+
   public static Finder<Long, Book> find =
     new Finder(Long.class, Book.class);
 

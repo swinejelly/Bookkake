@@ -75,7 +75,7 @@ public class Application extends Controller {
     b.active = "True";
     Long cents;
     try{
-      if (!form.get("price").isEmpty()){
+      if (form.get("price") != null){
         Double price = Double.parseDouble(form.get("price"));
         cents = Math.round(price * 100);
 	if (cents < 0) cents = 0L;

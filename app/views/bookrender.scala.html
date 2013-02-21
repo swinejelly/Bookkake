@@ -34,7 +34,7 @@
         </div>
 	@if(b.status == "Want to Sell"){
 	  <span class='price'>Offer</span>
-          <input type='number' name='price' min='0' max='1000' step='.01' placeholder='@(b.targetPrice / 100.0)' class='price'>
+	  <input type='number' name='price' min='0' max='1000' step='.01' placeholder=@if(b.targetPrice != null){'@(b.targetPrice / 100.0)'}else{'0.00'} class='price'>
 	}
         <input type="submit" value="Edit" id="submit-button">
       }
@@ -47,7 +47,7 @@
       console.log(toggle);
       if(toggle && !($(".price").length > 0)){
         $("#submit-button").before("<span class='price'>Offer</span>");
-        $("#submit-button").before("<input type='number' name='price' min='0' max='1000' step='.01' placeholder='@(b.targetPrice / 100.0)' class='price'>");
+	$("#submit-button").before("<input type='number' name='price' min='0' max='1000' step='.01' placeholder=@if(b.targetPrice != null){'@(b.targetPrice / 100.0)'}else{'0.00'} class='price'>");
       }else if (!toggle){
         $(".price").remove();
       }

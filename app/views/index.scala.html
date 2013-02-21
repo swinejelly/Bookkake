@@ -58,15 +58,14 @@
    </div>
    <div class="row">
    <div class="span10">
-   <table class="table table-bordered table-hover">
+   <table class="table table-bordered table-hover" style="table-layout:fixed;">
      <tr>
-       <td>Name</td>
-       <td>Author(s)</td>
-       <td>Who has it?</td>
-       <td>Status</td>
-       <td>Due date</td>
-       <td>Delete</td>
-       <td>Actions</td>
+       <td style="width: 30%";>Name</td>
+       <td style="width: 15%;">Author(s)</td>
+       <td style="width: 10%;">Who has it?</td>
+       <td style="width: 20%;">Status</td>
+       <td style="width: 15%;">Due date</td>
+       <td style="width: 10%;">Actions</td>
      </tr>
      @for(book <- Book.getOwnedAndPossessedBooks(Application.getUser())){
        @if(book.active == "True"){
@@ -87,14 +86,11 @@
 	   </td>
 	   <td>
              @if(book.userIdOwner == book.userIdPossessor){
-	       <a href="/books/delete/@book.id">Delete</a>
-	     }
-           </td>
-	   <td>
-             @if(book.userIdOwner == book.userIdPossessor){
 	     <a href="javascript:void(0)" onclick="lendbook(@book.id, '@book.name.replace("'", "\\'")')">Lend</a>
-	     /
+	     
 	     <a href="javascript:void(0)" onclick="givebook(@book.id, '@book.name.replace("'", "\\'")')">Give</a>
+	     
+	     <a href="/books/delete/@book.id">Delete</a>
 	     }
 	     @if(book.userIdOwner != book.userIdPossessor && book.userIdOwner == Application.getUser().id){
                <a href="/books/return/@book.id">Return</a>

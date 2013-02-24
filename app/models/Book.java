@@ -79,6 +79,14 @@ public class Book extends Model {
     return active.equalsIgnoreCase("True");
   }
 
+  public String priceAsString(){
+    if(targetPrice == null){
+      return "";
+    }else{
+      return String.format("%.2f", targetPrice / 100.0);
+    }
+  }
+
 
 }
 

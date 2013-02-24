@@ -76,7 +76,8 @@
 	   <td><span style="float: left;">@book.status</span>
 		   <b style="color: orange; float: right;">
 			   @if(book.targetPrice != null && book.status.equals("Want to Sell")){
-			         @("$%.2f".format(book.targetPrice / 100.0))}
+			         $@book.priceAsString()
+                           }
                    </b>
 	   </td>
 	   <td>

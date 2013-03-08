@@ -139,8 +139,9 @@ public class Application extends Controller {
   public static User getUser(){
     String name = userOverride == null ? request().getHeader("X-WEBAUTH-USER") : userOverride;
     String realName = request().getHeader("X-WEBAUTH-LDAP-CN");
-    if (User.find.where().eq("userName", name).findList().isEmpty()){
-      User user = new User();
+    User user = User.find.where().eq("userName", name).findUnique();
+    if (user == null){ //if not found
+      user = new User();
       user.userName = name;
       if (userOverride == null){
         user.realName = realName;
@@ -151,8 +152,12 @@ public class Application extends Controller {
       );
       Logger.info("User "+name+" created.");
       return user;
+    }else if (!realName.equals(user.realName)){
+      user.realName = realName;
+      user.update();
+      return user;
     }else{
-      return User.find.where().eq("userName", name).findUnique();
+      return user;
     }
   }
 

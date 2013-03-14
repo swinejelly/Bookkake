@@ -28,7 +28,7 @@ public class Book extends Model {
   @NotNull
   public Long userIdPossessor;
 
-  @javax.validation.constraints.Pattern(regexp="Using|Will lend|Want to Sell")
+  @javax.validation.constraints.Pattern(regexp="Using|Will lend|Want to Sell|In Library|Checked Out")
   public String status;
 
   @Size(min=0, max=128, message="Author names must be less than {max} characters!")
@@ -44,6 +44,8 @@ public class Book extends Model {
   @javax.validation.constraints.Min(0)
   @javax.validation.constraints.Max(100000)
   public Long targetPrice;
+
+  public boolean isLibrary = false;
   
 
   public static Finder<Long, Book> find =

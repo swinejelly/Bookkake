@@ -8,6 +8,10 @@ GET     /                               controllers.Application.index()
 # DEVELOPMENT ONLY
 POST	/switchuser			controllers.Application.switchUser()
 
+# Administration
+GET	/admin				controllers.Admin.home()
+GET	/admin/library			controllers.Admin.library()
+
 # Users
 GET	/users				controllers.Application.users()
 GET	/users/:id			controllers.Application.displayUser(id: Long)

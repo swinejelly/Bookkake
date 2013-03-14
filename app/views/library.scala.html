@@ -1,0 +1,36 @@
+@(books : List[Book])
+
+@main("Bookkake", "Library Admin"){
+  <h1>Library Administration</h1>
+  <div class="row">
+    <div class="span8">
+      <table class="table table-bordered table-hover" style="table-layout:fixed;">
+        <tr>
+          <td>Name</td>
+	  <td>Author</td>
+          <td>Who has it?</td>
+          <td>Actions</td>
+	</tr>
+        @for(book <- books){
+	  <tr>
+            <td><a href="/books/@book.id">@book.name</a></td>
+	    <td>@book.author</td>
+	    <td>@linkuserid(book.userIdPossessor)</td>
+	    <td>NULL</td>
+	  </tr>
+	}
+      </table>
+    </div>
+    <div class="span4">
+      <form method="POST" action="/books" id="add-book-form" class="right-col-form">
+        Enter book name:
+        <div><input type="text" name="name"></div>
+        <span style="white-space: nowrap;">Enter author(s) name (optional):</span>
+        <div><input type="text" name="author"></div>
+        <br>
+        <input id="add-submit" type="submit" value="Create">
+	<input type="hidden" name="library" value="true">
+      </form>
+    </div>
+  </div>
+}

@@ -61,16 +61,24 @@ public class Application extends Controller {
    * name: book name
    * status: Want to Sell, Willing to Lend, or Using
    * author: optional: author(s)' names.
+   * library: optional: boolean string indicating if this should be a library book (default false)
    */
   public static Result newBook(){
     DynamicForm form = new DynamicForm().bindFromRequest();
+    boolean isLibrary = form.get("library").equalsIgnoreCase("true");
     //Build and save book
     Book b = new Book();
+    b.isLibrary = isLibrary;
     b.name = form.get("name");
-    Long currentUserId = getUser().id;
-    b.userIdOwner = currentUserId;
-    b.userIdPossessor = currentUserId;
-    b.status = form.get("status");
+    if (isLibrary){
+      b.userIdOwner = -1L;
+      b.userIdPossessor = -1L;
+    }else{
+      Long currentUserId = getUser().id;
+      b.userIdOwner = currentUserId;
+      b.userIdPossessor = currentUserId;
+    }
+    b.status = isLibrary ? "In Library" : form.get("status");
     b.author = form.get("author");
     b.active = "True";
     Long cents;

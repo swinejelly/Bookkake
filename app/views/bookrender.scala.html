@@ -5,7 +5,15 @@
   <h2>@b.name</h2>
   <div class="row">
     <div class="span10">
-      <h3>Owned by @linkuserid(b.userIdOwner) -- Possessed by @linkuserid(b.userIdPossessor)</h3>
+      @if(b.userIdOwner != -1){
+        <h3>Owned by @linkuserid(b.userIdOwner) -- Possessed by @linkuserid(b.userIdPossessor)</h3>
+      }else{
+        @if(b.userIdPossessor != -1){
+	  <h3>Checked out by @linkuserid(b.userIdPossessor)</h3>
+	}else{
+	  <h3>Currently in Library</h3>
+	}
+      }
     </div>
     @if(Application.getUser().id == b.userIdOwner){
     <div class="span2">

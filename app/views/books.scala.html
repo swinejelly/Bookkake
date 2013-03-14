@@ -16,8 +16,8 @@
       <tr>
         <td><a href="/books/@book.id">@book.name</a></td>
         <td>@book.author</td>
-        <td>@User.find.where().eq("id", book.userIdOwner).findUnique().userName</td>
-	<td>@User.find.where().eq("id", book.userIdPossessor).findUnique().userName</td>
+        <td>@linkuserid(book.userIdOwner)</td>
+	<td>@linkuserid(book.userIdPossessor)</td>
 	<td>@book.status @if(book.targetPrice != null && book.status.equals("Want to Sell")){ 
 		<b style="color:orange; float:right">$@book.priceAsString()</b>
         } 

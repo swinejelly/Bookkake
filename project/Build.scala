@@ -1,6 +1,6 @@
 import sbt._
 import Keys._
-import play.Project._
+import PlayProject._
 
 object ApplicationBuild extends Build {
 
@@ -12,7 +12,7 @@ object ApplicationBuild extends Build {
       "mysql" % "mysql-connector-java" % "5.1.18"
     )
 
-    val main = play.Project(appName, appVersion, appDependencies).settings(
+    val main = PlayProject(appName, appVersion, appDependencies, mainLang = JAVA).settings(
       // Add your own project settings here      
     )
 

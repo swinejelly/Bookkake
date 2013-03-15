@@ -98,8 +98,9 @@ public class Application extends Controller {
   public static Result displayBook(Long id){
     Book b = Book.find.byId(id);
     if (b != null){
+      List<Transaction> transactions = Transaction.find.where().eq("bookId", b.id).orderBy("date ASC").findList();
       return ok(
-        views.html.bookrender.render(b)
+        views.html.bookrender.render(b, transactions)
       );
     }else{
       return redirectErr("No book by id "+id.toString()+" exists");

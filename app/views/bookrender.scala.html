@@ -1,4 +1,4 @@
-@(b: Book)
+@(b: Book, transactions: List[models.Transaction])
 @import scala._
 @import helper._
 @main("Bookkake", b.name){
@@ -23,8 +23,7 @@
   </div>
   <div class="row">
     <div class="span10">
-	    @transactiontable(models.Transaction.find.where().eq("bookId", b.id).orderBy("date ASC").findList(),
-	      List("Date", "Type", "User", "Receiver", "Payment", "Due-Date"))
+      @transactiontable(transactions, List("Date", "Type", "User", "Receiver", "Payment", "Due-Date"))
     </div>
     @if(Application.getUser().id == b.userIdOwner){
     <div class="span2">

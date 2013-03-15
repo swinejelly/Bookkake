@@ -89,7 +89,12 @@ public class Application extends Controller {
       Logger.info("Book "+b.name+" created.");
       TransactionController.bookCreation(getUser(), b);
       //Display success
-      return redirectSucc("Book "+b.name+" created.");
+      if (!isLibrary){
+        return redirectSucc("Book "+b.name+" created.");
+      }else{
+        flash("success", "Library book added");
+	return redirect(routes.Admin.library());
+      }
     }else{
       return redirectErr(errorsAsString(b));
     }

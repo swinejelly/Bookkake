@@ -23,11 +23,4 @@ public class Admin extends Controller {
 		List<Book> books = Book.find.where().eq("isLibrary", true).eq("active", "True").findList();
 		return ok(library.render(books));
 	}
-
-	public static Result libraryAdmin(){
-		return ok(libraryAdmin.render());
-	}
-
-
-
 }

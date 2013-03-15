@@ -23,6 +23,7 @@ GET	/books/:id			controllers.Application.displayBook(id: Long)
 GET	/books/delete/:id		controllers.Application.deleteBook(id: Long)
 POST	/books/edit/:id			controllers.Application.editBook(id: Long)
 GET	/books/return/:id		controllers.Application.returnBook(id: Long)
+GET	/books/checkout/:id		controllers.Application.checkoutBook(id: Long)
 # Carry out transactions
 POST	/books/give/:id			controllers.Application.give(id: Long)
 POST	/books/loan/:id			controllers.Application.loan(id: Long)

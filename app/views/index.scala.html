@@ -93,7 +93,7 @@
 	     
 	     <a href="/books/delete/@book.id">Delete</a>
 	     }
-	     @if(book.userIdOwner != book.userIdPossessor && book.userIdOwner == Application.getUser().id){
+	     @if(book.userIdOwner != book.userIdPossessor && (book.userIdOwner == Application.getUser().id || book.userIdOwner == -1)){
                <a href="/books/return/@book.id">Return</a>
 	     }
 	   </td>

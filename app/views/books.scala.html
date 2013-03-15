@@ -10,6 +10,7 @@
       <td>Owner</td>
       <td>Who has it</td>
       <td>Status</td>
+      <td>Check out</td>
     </tr>
     @for(book <- books) {
     @if(book.active == "True"){
@@ -19,9 +20,14 @@
         <td>@linkuserid(book.userIdOwner)</td>
 	<td>@linkuserid(book.userIdPossessor)</td>
 	<td>@book.status @if(book.targetPrice != null && book.status.equals("Want to Sell")){ 
-		<b style="color:orange; float:right">$@book.priceAsString()</b>
+          <b style="color:orange; float:right">$@book.priceAsString()</b>
         } 
 	</td>
+	<td>
+          @if(book.userIdPossessor == -1){
+            <a href="/books/checkout/@book.id">Check out</a>
+          }
+        </td>
       </tr>
     }
     }

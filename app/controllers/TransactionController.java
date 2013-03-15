@@ -52,4 +52,12 @@ public class TransactionController extends Controller {
     t.dueDate = due;
     t.save();
   }
+
+  public static void bookCheckout(User receiver, Book b){
+    Transaction t = new Transaction();
+    t.userId = receiver.id;
+    t.bookId = b.id;
+    t.kind = "Checkout";
+    t.save();
+  }
 }

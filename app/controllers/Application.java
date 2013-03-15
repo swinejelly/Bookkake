@@ -130,6 +130,23 @@ public class Application extends Controller {
     );
   }
 
+  public static Result checkoutBook(Long id){
+    Book b = Book.find.byId(id);
+    if (b != null && b.userIdPossessor == -1 && b.userIdOwner == -1){
+      b.userIdPossessor = getUser().id;
+      b.status = "Checked Out";
+      b.update();
+      TransactionController.bookCheckout(getUser(), b);
+    }else if (b == null){
+      return redirectErr("No book by id "+id.toString()+" exists");
+    }else if (b.userIdOwner != -1){
+      return redirectErr("That book is not a library book");
+    }else{
+      return redirectErr("That book is already checked out by another user");
+    }
+    return redirectSucc("Book checked out");
+  }
+
   /**
    * Returns the user name, creating that user if not found in database.
    * username should be forwarded in http header as X-WEBAUTH-USER
@@ -247,14 +264,20 @@ public class Application extends Controller {
 
   public static Result returnBook(Long id){
     Book b = Book.find.byId(id);
-    if (b != null && getUser().id == b.userIdOwner){
+    if (b != null && (getUser().id == b.userIdOwner || b.userIdOwner == -1)){
       b.userIdPossessor = b.userIdOwner;
       b.due = null;
+      if (b.userIdOwner == -1){
+        b.status = "In Library";
+      }
       b.update();
       //create the transaction
       Transaction t = new Transaction();
       t.userId = b.userIdOwner;
       t.receiverId = b.userIdOwner;
+      if (b.userIdOwner == -1){
+        t.userId = getUser().id;
+      }
       t.bookId = b.id;
       t.kind = "Return";
       t.save();

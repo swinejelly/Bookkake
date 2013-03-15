@@ -65,7 +65,7 @@ public class Application extends Controller {
    */
   public static Result newBook(){
     DynamicForm form = new DynamicForm().bindFromRequest();
-    boolean isLibrary = form.get("library").equalsIgnoreCase("true");
+    boolean isLibrary = (form.get("library") == null) ? false : form.get("library").equalsIgnoreCase("true");
     //Build and save book
     Book b = new Book();
     b.isLibrary = isLibrary;
@@ -81,19 +81,8 @@ public class Application extends Controller {
     b.status = isLibrary ? "In Library" : form.get("status");
     b.author = form.get("author");
     b.active = "True";
-    Long cents;
-    try{
-      if (form.get("price") != null){
-        Double price = Double.parseDouble(form.get("price"));
-        cents = Math.round(price * 100);
-	if (cents < 0) cents = 0L;
-      }else{
-        cents = 0L;
-      }
-    }catch (NumberFormatException e){
-      return redirectErr("Could not understand price input; transaction canceled");
-    }
-    b.targetPrice = cents;
+    Long cents = priceAsCents(form.get("price"));
+    b.targetPrice = cents == null ? 0L : cents;
     if (errorsAsString(b).isEmpty()){
       b.save();
       //Create transaction
@@ -173,18 +162,8 @@ public class Application extends Controller {
     DynamicForm form = new DynamicForm().bindFromRequest();
     Book b = Book.find.byId(id);
     User u = User.find.where().eq("userName", form.get("name")).findUnique();
-    Long cents;
-    try{
-      if (!form.get("price").isEmpty()){
-        Double price = Double.parseDouble(form.get("price"));
-        cents = Math.round(price * 100);
-	if (cents < 0) cents = 0L;
-      }else{
-        cents = 0L;
-      }
-    }catch (NumberFormatException e){
-      return redirectErr("Could not understand price input; transaction canceled");
-    }
+    Long cents = priceAsCents(form.get("price"));
+    cents = cents == null ? 0L : cents;
     if (u != null && b != null && 
         b.userIdOwner == getUser().id && b.userIdPossessor == getUser().id){
       //update book's possession and ownership
@@ -207,18 +186,8 @@ public class Application extends Controller {
     DynamicForm form = new DynamicForm().bindFromRequest();
     Book b = Book.find.byId(id);
     User u = User.find.where().eq("userName", form.get("name")).findUnique();
-    Long cents;
-    try{
-      if (!form.get("price").isEmpty()){
-        Double price = Double.parseDouble(form.get("price"));
-        cents = Math.round(price * 100);
-	if (cents < 0) cents = 0L;
-      }else{
-        cents = 0L;
-      }
-    }catch (NumberFormatException e){
-      return redirectErr("Could not understand price input; transaction canceled");
-    }
+    Long cents = priceAsCents(form.get("price"));
+    cents = cents == null ? 0L : cents;
     if (u != null && b != null && 
         b.userIdOwner == getUser().id && b.userIdPossessor == getUser().id){
       b.userIdPossessor = u.id;
@@ -371,5 +340,23 @@ public class Application extends Controller {
       sb.deleteCharAt(sb.length() - 1);
     }
     return sb.toString();
+  }
+
+  /**
+   * Parse the price as cents, and return it as a Long.
+   * Return null if input is invalid.
+   */
+  private static Long priceAsCents(String str){
+    Long cents = null;
+    try{
+      if (str != null){
+        Double price = Double.parseDouble(str);
+        cents = Math.round(price * 100);
+	if (cents < 0) cents = null;
+      }
+    }catch (NumberFormatException e){
+      return null;
+    }
+    return cents;
   }
 }

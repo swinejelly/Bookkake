@@ -208,7 +208,8 @@ public class Application extends Controller {
       TransactionController.bookTransfer(getUser(), u, b, cents, dueDate);
       b.update();
       //Display success.
-      return redirectSucc(format("Book loaned to %1$s; due on %1$s",
+      return redirectSucc(format("Book loaned to %1$s; due on %2$s",
+        u.userName,
         DateFormat.getDateInstance(DateFormat.MEDIUM).format(dueDate)));
 
     //error cases
